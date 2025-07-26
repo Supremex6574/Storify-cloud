@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Storify - Cloud Storage</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+       body { 
+    margin: 0; 
+    font-family: 'Roboto', sans-serif; 
+    overflow-x: hidden;  /* Prevent horizontal scrolling */
+    overflow-y: auto; /* Allow vertical scrolling */
+    transition: background-color 1s ease; 
+}
+
+.sky { 
+    position: absolute; 
+    width: 100%; 
+    height: 100vh; 
+    background: linear-gradient(to bottom, #4facfe, #00f2fe); 
+    transition: background 1s ease-in-out; 
+}
+
+.sun { 
+    position: absolute; 
+    top: 10%; 
+    left: 10%; 
+    width: 80px; 
+    height: 80px; 
+    background: yellow; 
+    border-radius: 50%; 
+    box-shadow: 0 0 50px rgba(255, 223, 0, 0.8); 
+    animation: sunMove 20s linear infinite alternate; 
+}
+
+.moon { 
+    position: absolute; 
+    top: 10%; 
+    left: 10%; 
+    width: 80px; 
+    height: 80px; 
+    background: #f0f0f0; 
+    border-radius: 50%; 
+    box-shadow: 0 0 50px rgba(255, 255, 255, 0.8); 
+    transform: scale(0); 
+}
+
+@keyframes sunMove { 
+    0% { transform: translateY(0); } 
+    100% { transform: translateY(50px); } 
+}
+
+.stars { 
+    position: absolute; 
+    width: 100%; 
+    height: 100vh; 
+    background: url('https://upload.wikimedia.org/wikipedia/commons/7/7d/Starsinthesky.jpg'); 
+    background-size: cover; 
+    opacity: 0; 
+    transition: opacity 1s ease-in-out; 
+}
+
+.clouds { 
+    position: absolute; 
+    width: 100%; 
+    height: 100%; 
+}
+
+.cloud { 
+    position: absolute; 
+    background: white; 
+    width: 150px; 
+    height: 80px; 
+    border-radius: 50%; 
+    opacity: 0.8; 
+    animation: moveClouds 30s linear infinite; 
+}
+
+.cloud1 { top: 20%; left: -200px; animation-delay: 0s; }
+.cloud2 { top: 60%; left: -200px; animation-delay: 10s; }
+
+@keyframes moveClouds { 
+    0% { transform: translateX(-200px); } 
+    100% { transform: translateX(110vw); } 
+}
+
+/* Central Cloud Shape */
+.cloud-container { 
+    position: absolute; 
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%); 
+    width: 600px; 
+    background: white; 
+    padding: 40px; 
+    text-align: center; 
+    border-radius: 50%; 
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    transition: height 0.3s ease-in-out;
+}
+
+.upload-area { 
+    border: 2px dashed #0056b3; 
+    padding: 20px; 
+    border-radius: 10px; 
+    background: #e0f7fa; 
+    cursor: pointer; 
+    transition: background 0.3s ease-in-out;
+}
+
+.upload-area:hover { background: #b2ebf2; }
+
+.btn-view-files { 
+    width: 80%; 
+    font-size: 0.9rem; 
+    padding: 8px; 
+}
+
+.progress { display: none; }
+
+.dark-mode-toggle { 
+    position: absolute; 
+    top: 20px; 
+    right: 20px; 
+    width: 50px; 
+    height: 50px; 
+    border: none; 
+    border-radius: 50%; 
+    background: #fff; 
+    font-size: 1.5rem; 
+    cursor: pointer; 
+}
+
+body.dark-mode .sky { background: linear-gradient(to bottom, #1a1a40, #00001a); }
+body.dark-mode .sun { opacity: 0; }
+body.dark-mode .moon { transform: scale(1); }
+body.dark-mode .stars { opacity: 1; }
+
+/* File List Styling */
+.file-list { 
+    display: none; 
+    margin-top: 15px; 
+    text-align: center; 
+    max-height: 200px; 
+    overflow-y: auto; /* Enable vertical scrolling */
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+    max-width: 100%; /* Ensure it doesn't overflow */
+}
+
+.file-item { 
+    padding: 5px 0; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    gap: 10px; 
+    flex-wrap: wrap; /* Ensure responsiveness */
+}
+
+.footer {
+    text-align: center;
+    padding: 15px;
+    background-color: #f8f9fa;
+    color: #333;
+    font-size: 14px;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    border-top: 1px solid #ddd;
+}
+.dark-mode .footer {
+    background-color: #222;
+    color: #f8f9fa;
+    border-top: 1px solid #444;
+}
+
+
+
+
+    </style>
+</head>
+<body>
+   <body>
+    <div class="sky">
+        <div class="sun"></div>
+        <div class="moon"></div>
+        <div class="stars"></div>
+        <div class="clouds">
+            <div class="cloud cloud1"></div>
+            <div class="cloud cloud2"></div>
+        </div>
+    </div>
+
+    
+
+    <!-- Your cloud-shaped container and other elements go here -->
+</body>
+
+	
+
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌙</button>
+
+    <div class="cloud-container">
+        <h1>Storify - Cloud Storage</h1>
+        <p>Securely upload, store, and manage your files.</p>
+
+        <div class="upload-area" id="dragArea">
+            <p>Drag & Drop Files Here or Click to Upload</p>
+            <input type="file" id="fileInput" hidden multiple>
+        </div>
+
+        <div class="progress mt-3" id="uploadProgressContainer">
+            <div class="progress-bar progress-bar-striped progress-bar-animated" id="uploadProgress" style="width: 0%;">0%</div>
+        </div>
+		   <div class="mt-4">
+        <label class="form-label">Enter Access Code:</label>
+        <input type="text" id="accessCodeInput" class="form-control" placeholder="Enter 5-digit code">
+        <button class="btn btn-info mt-2" onclick="fetchFiles()">View Files</button>
+    </div>
+
+    <div class="mt-3" id="fileList"></div>
+</div>
+
+<script>
+    // Dark Mode Toggle Function
+    function toggleDarkMode() {
+        document.body.classList.toggle("dark-mode");
+    }
+
+    // File Input and Drag Area Elements
+    const fileInput = document.getElementById('fileInput');
+    const dragArea = document.getElementById('dragArea');
+    const progressBar = document.getElementById('uploadProgress');
+    const progressContainer = document.getElementById('uploadProgressContainer');
+    const fileListDiv = document.getElementById("fileList");
+
+    // Event listeners for file input and drag area
+    dragArea.addEventListener('click', () => fileInput.click());
+
+    fileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) uploadFile(file);
+    });
+
+    // File upload function
+    async function uploadFile(file) {
+        if (!file) {
+            alert("Please select a file.");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("file", file);
+
+        // Show progress bar
+        document.getElementById("uploadProgressContainer").style.display = "block";
+        document.getElementById("uploadProgress").style.width = "0%";
+
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://34.117.143.236/upload", true);  // Updated to the new IP and port 80
+
+        // Update progress bar during upload
+        xhr.upload.onprogress = function (event) {
+            if (event.lengthComputable) {
+                let percent = Math.round((event.loaded / event.total) * 100);
+                document.getElementById("uploadProgress").style.width = percent + "%";
+                document.getElementById("uploadProgress").innerText = percent + "%";
+            }
+        };
+
+        // Handle response from the server after upload
+        xhr.onload = function () {
+            document.getElementById("uploadProgressContainer").style.display = "none";
+            if (xhr.status === 200) {
+                const response = JSON.parse(xhr.responseText);
+                alert("File uploaded successfully! Your access code: " + response.access_code);
+            } else {
+                alert("Upload failed: " + xhr.responseText);
+            }
+        };
+
+        // Send the file data
+        xhr.send(formData);
+    }
+
+    // Fetch files based on access code
+    async function fetchFiles() {
+        const code = document.getElementById("accessCodeInput").value.trim();
+        if (code.length !== 5) {
+            alert("Please enter a valid 5-digit code.");
+            return;
+        }
+
+        const response = await fetch("http://34.117.143.236/list", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ code: code })
+        });
+
+        const result = await response.json();
+        const fileListDiv = document.getElementById("fileList");
+        fileListDiv.innerHTML = "";
+
+        if (result.files.length > 0) {
+            result.files.forEach(file => {
+                const safeFile = file.replace(/'/g, "\\'");
+                fileListDiv.innerHTML += `
+                    <div>
+                        <p>${file}</p>
+                        <button class="btn btn-sm btn-success" onclick="downloadFile('${safeFile}')">Download</button>
+                        <button class="btn btn-sm btn-danger" onclick="removeFile('${safeFile}')">Remove</button>
+                    </div>
+                `;
+            });
+        } else {
+            fileListDiv.innerHTML = "<p>No files found for this code.</p>";
+        }
+    }
+
+   async function downloadFile(fileName) {
+    const response = await fetch(`http://34.117.143.236/download/${fileName}?nocache=${Date.now()}`, {
+        method: 'GET',
+        headers: {
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache'
+        }
+    });
+
+    try {
+        const result = await response.json();
+        console.log("Result:", result);
+
+        // Fallback in case backend fails to send signed URL
+        const fallbackUrl = `https://storage.googleapis.com/storify-cloud-files/${fileName}`;
+
+        window.location.href = result.download_url || fallbackUrl;
+
+    } catch (error) {
+        console.error("Failed to parse response:", error);
+        alert(`Download failed for ${fileName}. Check console.`);
+    }
+}
+
+
+
+    // File removal function
+    async function removeFile(fileName) {
+        const response = await fetch(`http://34.117.143.236/delete/${fileName}`, {
+            method: "DELETE"
+        });
+        if (response.ok) {
+            alert("File removed successfully!");
+            fetchFiles();
+        } else {
+            alert("Failed to remove file.");
+        }
+    }
+
+    // Drag & Drop functionality
+    dragArea.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        dragArea.style.background = "#b2ebf2";
+    });
+
+    dragArea.addEventListener("dragleave", () => {
+        dragArea.style.background = "#e0f7fa";
+    });
+
+    dragArea.addEventListener("drop", (e) => {
+        e.preventDefault();
+        dragArea.style.background = "#e0f7fa";
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            uploadFile(files[0]);
+        }
+    });
+</script>
+
+<footer class="footer">
+    <p>&copy; 2025 Storify Cloud. All rights reserved. | Developed by Sohail Ali Mallick</p>
+</footer>
